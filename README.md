@@ -19,7 +19,7 @@ npm install corename
 const projectName = getCoreName(pkgJson);
 ```
 
-### Example(1)
+### Example
 
 ```js
 import getCoreName from "corename";
