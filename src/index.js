@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 function unpackName(packageDeps, isNameDefault) {
-  const { name } = packageDeps;
+  const { name = "" } = packageDeps;
 
   return name.includes("/") ? name.split("/")[0] : isNameDefault ? name : null;
 }
