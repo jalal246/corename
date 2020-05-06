@@ -1,3 +1,20 @@
+function unpackName(packageDeps) {
+  const { name } = packageDeps;
+
+  return name.includes("@") ? name.split("/")[0] : null;
+}
+
+function loopInPkg(pkgJson) {
+  let pojName = null;
+
+  for (let i = 0; i < pkgJson.length; i += 1) {
+    const packageDeps = pkgJson[i] || {};
+
+    pojName = unpackName(packageDeps);
+    if (pojName) break;
+  }
+}
+
 /**
  * Extracts project name in monorepo
  * by examining name of package that matches "@"
@@ -6,21 +23,15 @@
  * @returns {string} name
  */
 function getCoreName(pkgJson = []) {
-  let pojName;
-
-  for (let i = 0; i < pkgJson.length; i += 1) {
-    const packageDeps = pkgJson[i] || {};
-
-    const { name } = packageDeps;
-
-    if (name.includes("@")) {
-      // eslint-disable-next-line
-      pojName = name.split("/")[0];
-      break;
-    }
+  if (Array.isArray(pkgJson)) {
+    return loopInPkg(pkgJson);
   }
 
-  return pojName;
+  if (Object.keys(pkgJson).length > 0) {
+    return unpackName(pkgJson);
+  }
+
+  return null;
 }
 
 module.exports = getCoreName;
