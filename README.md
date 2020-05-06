@@ -1,62 +1,95 @@
 # corename
 
-> Gets name of monorepo project :information_desk_person:
+> Extracts the name of monorepo project
 
 ```bash
 npm install corename
 ```
 
-## getCoreName
+## API
 
-```js
-/**
- * Extracts project name in monorepo
- * by examining name of package that matches "@"
- *
- * @param {Array} [pkgJson=[]]
- * @returns {string} name
- */
-const projectName = getCoreName(pkgJson);
+### getCoreName
+
+```ts
+getCoreName(pkgJson: Array<pkgJsonObj>|Object)
 ```
 
-### Example
+### Usage
 
 ```js
 import getCoreName from "corename";
 
 const pkg0 = {
-  name: "@folo/withcontext",
-  dependencies: {}
+  name: "pkg-first",
+  dependencies: {},
 };
 
 const pkg1 = {
-  name: "@folo/values",
+  name: "@pkg-second",
   dependencies: {
-    "@folo/withcontext": "^0.1.5"
-  }
+    "@pkg/first": "^0.1.5",
+  },
 };
 
-const projectName = getCoreName([pkg0, pkg1]);
+const pkg2 = {
+  name: "@pkg/third",
+  dependencies: {},
+};
 
-expect(projectName).to.be.equal("@folo");
+const name = getCoreName([pkg0, pkg1, pkg2]);
+
+// name = "@pkg";
 ```
 
-### Related projects
+Or just pass a single package
 
-- [packageSorter](https://github.com/jalal246/packageSorter) - Sorting packages
-  for monorepos production.
+```js
+const name = getCoreName(pkg2);
 
-- [builderz](https://github.com/jalal246/builderz) - Building your project with
-  zero config.
+// name = "@pkg";
+```
 
-- [get-info](https://github.com/jalal246/get-info) - Utility functions for projects production
+In case there's no matching pattern, it returns null:
 
-## Tests
+```js
+const name = getCoreName(pkg1);
+
+// name = null;
+```
+
+Or tell it to return the exact name found in package.json
+
+```js
+const returnNameIfMonoNotFound = true;
+
+const name = getCoreName(pkg1, returnNameIfMonoNotFound);
+
+// name = "@pkg-second";
+```
+
+### Tests
 
 ```sh
 npm test
 ```
 
-## License
+### License
 
 This project is licensed under the [GPL-3.0 License](https://github.com/jalal246/corename/blob/master/LICENSE)
+
+### Related projects
+
+- [builderz](https://github.com/jalal246/builderz) - JavaScript Bundler with zero configuration.
+
+- [packageSorter](https://github.com/jalal246/packageSorter) - Sorting packages
+  for monorepos production.
+
+- [get-info](https://github.com/jalal246/get-info) - Utility functions for projects production
+
+- [move-position](https://github.com/jalal246/move-position) - Moves element
+  index in an array.
+
+- [textics](https://github.com/jalal246/textics) & [textics-stream](https://github.com/jalal246/textics-stream) - Counts lines, words, chars and spaces for a given string.
+
+- [folo](https://github.com/jalal246/folo) - Form & Layout Components Built with
+  React.
