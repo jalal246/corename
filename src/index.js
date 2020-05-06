@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-function unpackName(packageDeps, isNameDefault = true) {
+function unpackName(packageDeps, isNameDefault) {
   const { name } = packageDeps;
 
   return name.includes("/") ? name.split("/")[0] : isNameDefault ? name : null;
@@ -25,11 +25,11 @@ function loopInPkg(pkgJson) {
  * @param {Array} [pkgJson=[]]
  * @returns {string} name
  */
-function getCoreName(pkgJson = []) {
+function getCoreName(pkgJson = [], returnNameIfMonoNotFound = false) {
   return Array.isArray(pkgJson)
     ? loopInPkg(pkgJson)
     : Object.keys(pkgJson).length > 0
-    ? unpackName(pkgJson)
+    ? unpackName(pkgJson, returnNameIfMonoNotFound)
     : null;
 }
 
