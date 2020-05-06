@@ -1,7 +1,8 @@
-function unpackName(packageDeps) {
+/* eslint-disable no-nested-ternary */
+function unpackName(packageDeps, isNameDefault = true) {
   const { name } = packageDeps;
 
-  return name.includes("@") ? name.split("/")[0] : null;
+  return name.includes("/") ? name.split("/")[0] : isNameDefault ? name : null;
 }
 
 function loopInPkg(pkgJson) {
@@ -10,9 +11,11 @@ function loopInPkg(pkgJson) {
   for (let i = 0; i < pkgJson.length; i += 1) {
     const packageDeps = pkgJson[i] || {};
 
-    pojName = unpackName(packageDeps);
+    pojName = unpackName(packageDeps, false);
     if (pojName) break;
   }
+
+  return pojName;
 }
 
 /**
@@ -23,15 +26,11 @@ function loopInPkg(pkgJson) {
  * @returns {string} name
  */
 function getCoreName(pkgJson = []) {
-  if (Array.isArray(pkgJson)) {
-    return loopInPkg(pkgJson);
-  }
-
-  if (Object.keys(pkgJson).length > 0) {
-    return unpackName(pkgJson);
-  }
-
-  return null;
+  return Array.isArray(pkgJson)
+    ? loopInPkg(pkgJson)
+    : Object.keys(pkgJson).length > 0
+    ? unpackName(pkgJson)
+    : null;
 }
 
 module.exports = getCoreName;
