@@ -6,7 +6,7 @@
   "author": "Jalal Maskoun <jimmy002020@gmail.com>",
   "license": "LGPL-3.0",
   "scripts": {
-    "test": "mocha -require @babel/register"
+    "test": "mocha"
   },
   "files": [
     "src",
